@@ -64,6 +64,10 @@ class LoginView(GenericAPIView):
         if getattr(settings, 'REST_USE_JWT', False):
             self.token = jwt_encode(self.user)
         else:
+            existente = self.token_model.objects.filter(user = self.user)
+            if existente.exists():
+                existente.delete()
+                
             self.token = create_token(self.token_model, self.user,
                                       self.serializer)
 
